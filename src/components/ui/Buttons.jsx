@@ -1,4 +1,3 @@
-// src/components/ui/Buttons.jsx
 import React from 'react';
 
 export function PrimaryButton({ text, onClick, style }) {

@@ -1,8 +1,7 @@
-// src/components/MainLayout.jsx
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Header from './common/Header.jsx'; // Looks inside src/components/common/Header.jsx
-import Footer from './common/Footer.jsx';        // Looks inside src/components/Footer.jsx
+import Header from './common/Header.jsx'; 
+import Footer from './common/Footer.jsx';        
 
 function MainLayout() {
   return (

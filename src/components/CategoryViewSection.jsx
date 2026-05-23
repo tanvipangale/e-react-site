@@ -1,4 +1,3 @@
-// src/components/CategoryViewSection.jsx
 import React from 'react';
 import { products } from '../data/Products.js';
 

@@ -1,4 +1,3 @@
-// src/components/ProductsSection.jsx
 import React from 'react';
 import ProductCard from './ProductCard.jsx';
 import { products } from '../data/Products.js';

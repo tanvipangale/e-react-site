@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 import React, { useState } from 'react';
 import HeroSection from '../components/HeroSection.jsx';
 import ProductsSection from '../components/ProductsSection.jsx';

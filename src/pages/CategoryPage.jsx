@@ -1,4 +1,3 @@
-// src/pages/CategoryPage.jsx
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import TopBar from '../components/Topbar.jsx'

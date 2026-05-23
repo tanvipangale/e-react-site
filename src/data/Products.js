@@ -1,4 +1,3 @@
-// src/data/Products.js
 export const products = [
   // Electronics
   {
