@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useStore } from '../context/StoreContext.jsx';
+
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useStore();
   const [formData, setFormData] = useState({ username: '', password: '' });
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -32,10 +36,12 @@ function Login() {
 
       if (data.token) {
         localStorage.setItem('jwt_token', data.token);
-        localStorage.setItem('loggedInUser', data.user_display_name || formData.username);
+        const username = data.user_display_name || formData.username;
+        login(username);
         alert('Welcome back!');
         navigate('/');
       }
+
     } catch (err) {
       setError(err.message || 'Login connection failed.');
     } finally {

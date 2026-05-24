@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useStore } from '../context/StoreContext.jsx';
+
 
 function Register() {
   const navigate = useNavigate();
+  const { login } = useStore();
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -34,8 +38,10 @@ function Register() {
       }
 
       localStorage.setItem('loggedInUser', formData.username);
+      login(formData.username);
       alert('Account created successfully!');
       navigate('/');
+
     } catch (err) {
       setError(err.message || 'Could not connect to service.');
     } finally {

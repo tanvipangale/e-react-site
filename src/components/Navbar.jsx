@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useStore } from '../context/StoreContext.jsx';
 
 function Navbar() {
-  const { cartCount, wishlist } = useStore();
+  const { cartCount, wishlist, user, logout } = useStore();
 
   return (
     <nav>
@@ -20,8 +20,19 @@ function Navbar() {
           <i className="fa-solid fa-magnifying-glass"></i>
         </div>
 
-        <Link to="/login"><button className="nav-btn login-btn">Login</button></Link>
-        <Link to="/register"><button className="nav-btn register-btn">Register</button></Link>
+        {user ? (
+          <button className="nav-btn register-btn" onClick={logout} type="button">
+            Logout ({user})
+          </button>
+        ) : (
+          <>
+            <Link to="/login"><button className="nav-btn login-btn">Login</button></Link>
+            <Link to="/register"><button className="nav-btn register-btn">Register</button></Link>
+          </>
+        )}
+
+
+
 
         <Link to="/wishlist" className="icon">
           <i className="fa-regular fa-heart"></i>

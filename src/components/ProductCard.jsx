@@ -2,8 +2,10 @@ import React from 'react';
 import { useStore } from '../context/StoreContext.jsx';
 
 function ProductCard({ product }) {
-  const { addToCart, toggleWishlist, wishlist } = useStore();
+  const { addToCart, toggleWishlist, wishlist, cart } = useStore();
   const isWishlisted = wishlist.some(item => item.id === product.id);
+
+  const isInCart = cart.some((item) => item.id === product.id)
 
   return (
     <div className="product">
@@ -30,8 +32,12 @@ function ProductCard({ product }) {
         <span className="price">${product.price}</span>
       </div>
 
-      <button className="add-cart" onClick={() => addToCart(product)}>
-        Add To Cart
+      <button
+        className="add-cart"
+        onClick={() => addToCart(product)}
+        style={isInCart ? { background: '#C88E72', color: '#fff' } : undefined}
+      >
+        {isInCart ? 'Added' : 'Add To Cart'}
       </button>
     </div>
   );

@@ -4,9 +4,14 @@ import { useStore } from '../../context/StoreContext.jsx';
 
 function Header() {
   // Safely extract live state variable quantities from the active StoreContext
-  const { cartCount, wishlist } = useStore();
+  const { cartCount, wishlist, user, logout } = useStore();
+
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
+
     <header className="site-header">
       {/* Top Black Announcement Sub-Bar Section */}
       <div className="top-bar">
@@ -36,8 +41,21 @@ function Header() {
           </div>
 
           {/* Authorization Routes Redirection Switches */}
-          <Link to="/login"><button className="nav-btn login-btn">Login</button></Link>
-          <Link to="/register"><button className="nav-btn register-btn">Register</button></Link>
+          {user ? (
+            <button
+              type="button"
+              className="nav-btn register-btn"
+              onClick={handleLogout}
+            >
+              Logout ({user})
+            </button>
+          ) : (
+            <>
+              <Link to="/login"><button className="nav-btn login-btn">Login</button></Link>
+              <Link to="/register"><button className="nav-btn register-btn">Register</button></Link>
+            </>
+          )}
+
 
           {/* Live Updating Wishlist Link Icon Counter Badge */}
           <Link to="/wishlist" className="iconHub icon" style={{ position: 'relative', display: 'inline-block' }}>

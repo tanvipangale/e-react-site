@@ -1,8 +1,13 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 
 const StoreContext = createContext()
 
+const getUserFromStorage = () => localStorage.getItem('loggedInUser')
+const getCartKeyForUser = (username) => (username ? `cart:${username}` : 'cart:guest')
+const getWishlistKeyForUser = (username) => (username ? `wishlist:${username}` : 'wishlist:guest')
+
 export function StoreProvider({ children }) {
+  const [user, setUser] = useState(getUserFromStorage() || null)
   const [cart, setCart] = useState([])
   const [wishlist, setWishlist] = useState([])
   
@@ -10,22 +15,53 @@ export function StoreProvider({ children }) {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isWishlistOpen, setIsWishlistOpen] = useState(false)
 
-  // Load data from localStorage on startup
+  // Load user-specific data from localStorage on startup / user change
   useEffect(() => {
-    const savedCart = localStorage.getItem('cart')
-    const savedWishlist = localStorage.getItem('wishlist')
-    if (savedCart) setCart(JSON.parse(savedCart))
-    if (savedWishlist) setWishlist(JSON.parse(savedWishlist))
+    const cartKey = getCartKeyForUser(user)
+    const wishlistKey = getWishlistKeyForUser(user)
+
+    // Avoid parsing/setting state synchronously in the effect body
+    // by scheduling it for the next microtask.
+    Promise.resolve().then(() => {
+      const savedCart = localStorage.getItem(cartKey)
+      const savedWishlist = localStorage.getItem(wishlistKey)
+
+      setCart(savedCart ? JSON.parse(savedCart) : [])
+      setWishlist(savedWishlist ? JSON.parse(savedWishlist) : [])
+    })
+  }, [user])
+
+
+  // Save data whenever cart or wishlist changes (user-scoped)
+  useEffect(() => {
+    const cartKey = getCartKeyForUser(user)
+    localStorage.setItem(cartKey, JSON.stringify(cart))
+  }, [cart, user])
+
+  useEffect(() => {
+    const wishlistKey = getWishlistKeyForUser(user)
+    localStorage.setItem(wishlistKey, JSON.stringify(wishlist))
+  }, [wishlist, user])
+
+  const login = useCallback((username) => {
+    const nextUser = username || null
+    if (nextUser) {
+      localStorage.setItem('loggedInUser', nextUser)
+      setUser(nextUser)
+    } else {
+      localStorage.removeItem('loggedInUser')
+      setUser(null)
+    }
   }, [])
 
-  // Save data whenever cart or wishlist changes
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart))
-  }, [cart])
+  const logout = useCallback(() => {
+    localStorage.removeItem('jwt_token')
+    localStorage.removeItem('loggedInUser')
+    setUser(null)
+    setCart([])
+    setWishlist([])
+  }, [])
 
-  useEffect(() => {
-    localStorage.setItem('wishlist', JSON.stringify(wishlist))
-  }, [wishlist])
 
   const addToCart = (product) => {
     setCart((prev) => {
@@ -69,27 +105,31 @@ export function StoreProvider({ children }) {
     setWishlist((prev) => prev.filter((item) => item.id !== productId))
   }
 
-// Inside src/context/StoreContext.jsx
-const cartTotal = cart.reduce(
-  (total, item) => total + item.price * item.quantity,
-  0
-)
+  // Derived values
+  const cartTotal = cart.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  )
 
-// This counts total items in the basket to display in the red Navbar circle bubble
-const cartCount = cart.reduce((count, item) => count + item.quantity, 0)
+  // This counts total items in the basket to display in the red Navbar circle bubble
+  const cartCount = cart.reduce((count, item) => count + item.quantity, 0)
 
-return (
-  <StoreContext.Provider
-    value={{
-      cart,
-      wishlist,
-      addToCart,
-      removeFromCart,
-      updateQuantity,
-      toggleWishlist,
-      cartTotal,
-      cartCount, // Makes it accessible by your header
-    }}
+  return (
+    <StoreContext.Provider
+      value={{
+        user,
+        cart,
+        wishlist,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        toggleWishlist,
+        cartTotal,
+        cartCount, // Makes it accessible by your header
+        login,
+        logout,
+      }}
+
   >
     {children}
   </StoreContext.Provider>
@@ -97,3 +137,5 @@ return (
 }
 
 export const useStore = () => useContext(StoreContext)
+
+
