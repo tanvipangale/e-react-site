@@ -1,62 +1,96 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ProductCard from './ProductCard.jsx';
-import { products } from '../data/Products.js';
+import { apiService } from '../services/api';
 
 function ProductsSection({ selectedCategory, setSelectedCategory }) {
-  
-  // 💡 THE CONDITIONAL FILTER LOGIC
-  const filteredProducts = selectedCategory 
-    ? products.filter(product => product.category === selectedCategory) // If category is active, show only matching items
-    : products.filter(product => product.discount && product.discount > 0); // If on homepage, ONLY show items that have a discount!
+  const [products, setProducts] = useState([]);
 
-  return (
-    <section className="section container">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-        <div>
-          {/* Changes sub-heading text depending on where the user looks */}
-          <div className="today">
-            {selectedCategory ? `${selectedCategory}` : "Today's"}
-          </div>
-          {/* Changes main title text depending on where the user looks */}
-          <div className="flash-title">
-            {selectedCategory ? "Category Collection" : "Flash Sales"}
-          </div>
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const data = await apiService.getProducts();
+
+      if (data) {
+        setProducts(data);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Show category products OR only sale products
+  const filteredProducts = selectedCategory
+    ? products.filter((product) =>
+        product.categories?.some(
+          (cat) => cat.name === selectedCategory
+        )
+      )
+    : products.filter((product) => product.on_sale);
+
+return (
+  <section className="section container">
+
+    {/* FLASH SALES */}
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '30px'
+      }}
+    >
+      <div>
+        <div className="today">
+          Flash Sales
         </div>
-        
-        {/* If viewing a category, show a button to clear the filter and jump back to the sales page */}
-        {selectedCategory && (
-          <button 
-            onClick={() => setSelectedCategory(null)}
-            style={{
-              background: '#1E1E1E',
-              color: '#F9F6F0',
-              border: 'none',
-              padding: '10px 20px',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontWeight: '600',
-              transition: '0.2s'
-            }}
-          >
-            ← Back to Flash Sales
-          </button>
-        )}
+
+        <div className="flash-title">
+          Discount Products
+        </div>
+      </div>
+    </div>
+
+    <div className="products">
+      {products
+        .filter(
+          (product) =>
+            product.sale_price &&
+            product.sale_price !== ''
+        )
+        .map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+          />
+        ))}
+    </div>
+
+    {/* ALL PRODUCTS */}
+    <div
+      style={{
+        marginTop: '80px',
+        marginBottom: '30px'
+      }}
+    >
+      <div className="today">
+        Our Collection
       </div>
 
-      {/* Grid container to render our custom product card items */}
-      <div className="products">
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))
-        ) : (
-          <p style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px 0', color: '#7d7d7d', fontSize: '16px' }}>
-            No items are available in this category section right now.
-          </p>
-        )}
+      <div className="flash-title">
+        All Products
       </div>
-    </section>
-  );
+    </div>
+
+    <div className="products">
+      {products.map((product) => (
+        <ProductCard
+          key={product.id}
+          product={product}
+        />
+      ))}
+    </div>
+
+  </section>
+);
 }
 
 export default ProductsSection;

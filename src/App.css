@@ -23,7 +23,7 @@ a {
   padding: 0 20px;
 }
 
-/* ===================== TOP BAR ===================== */
+/*   TOP BAR   */
 .top-bar {
   background: #1E1E1E;
   color: #F9F6F0;
@@ -38,7 +38,7 @@ a {
 .top-bar span {
   margin-left: 5px;
   font-weight: bold;
-  color: #C88E72; /* Mellow Terracotta Accent */
+  color:#891d1a; /* Mellow Terracotta Accent */
   text-decoration: underline;
   cursor: pointer;
 }
@@ -48,7 +48,7 @@ a {
   right: 5%;
 }
 
-/* ===================== NAVBAR ===================== */
+/*   NAVBAR  */
 nav {
   display: flex;
   justify-content: space-between;
@@ -80,7 +80,7 @@ nav {
 }
 
 .nav-links a:hover {
-  color: #C88E72;
+  color:#891d1a;
 }
 
 .right-nav {
@@ -119,7 +119,7 @@ nav {
   position: absolute;
   top: -8px;
   right: -10px;
-  background: #C88E72;
+  background:#891d1a;
   color: white;
   border-radius: 50%;
   width: 18px;
@@ -152,11 +152,11 @@ nav {
 }
 
 .register-btn:hover {
-  background: #C88E72;
-  border-color: #C88E72;
+  background:#891d1a;
+  border-color:#891d1a;
 }
 
-/* ===================== HERO SECTION ===================== */
+/*   HERO SECTION   */
 .hero {
   display: flex;
   gap: 45px;
@@ -188,7 +188,7 @@ nav {
 }
 
 .sidebar li a:hover {
-  color: #C88E72;
+  color:#891d1a;
   padding-left: 5px;
 }
 
@@ -257,10 +257,10 @@ nav {
 }
 
 .banner-dot.active {
-  background-color: #C88E72;
+  background-color:#891d1a;
 }
 
-/* ===================== PRODUCT GRID LAYOUT ===================== */
+/*   PRODUCT GRID LAYOUT   */
 .section {
   padding: 0 5%;
   margin-top: 50px;
@@ -268,7 +268,7 @@ nav {
 }
 
 .today {
-  color: #C88E72;
+  color:#891d1a;
   font-weight: 600;
   font-size: 16px;
   margin-bottom: 15px;
@@ -280,10 +280,10 @@ nav {
 .today::before {
   content: '';
   display: inline-block;
-  width: 20px;
-  height: 40px;
-  background: #C88E72;
-  border-radius: 4px;
+  width: 8px;
+  height: 35px;
+  background:#891d1a;
+  border-radius: 0px;
 }
 
 .flash-title {
@@ -328,7 +328,7 @@ nav {
   position: absolute;
   top: 10px;
   left: 10px;
-  background: #C88E72;
+  background:#891d1a;
   color: white;
   font-size: 12px;
   font-weight: bold;
@@ -366,7 +366,7 @@ nav {
 }
 
 .add-cart:hover {
-  background: #C88E72;
+  background:#891d1a;
 }
 
 .product-info {
@@ -380,12 +380,12 @@ nav {
 }
 
 .price {
-  color: #C88E72;
+  color:#891d1a;
   font-weight: bold;
   font-size: 16px;
 }
 
-/* ===================== AUTHENTIC AUTHENTICATION STYLES ===================== */
+/*   AUTHENTIC AUTHENTICATION STYLES   */
 .auth-page {
   display: flex;
   justify-content: center;
@@ -447,7 +447,7 @@ nav {
 }
 
 .auth-container button:hover {
-  background: #C88E72;
+  background:#891d1a;
 }
 
 .auth-container p {
@@ -463,7 +463,7 @@ nav {
   margin-left: 5px;
 }
 
-/* ===================== SHOPPING CART PAGE STYLES ===================== */
+/*   SHOPPING CART PAGE STYLES   */
 .cart-container {
   display: flex;
   flex-direction: column;
@@ -509,7 +509,7 @@ nav {
 }
 
 .cart-info p {
-  color: #C88E72;
+  color:#891d1a;
   font-weight: 700;
   font-size: 16px;
   margin: 0;
@@ -580,10 +580,10 @@ nav {
 }
 
 .checkout-btn:hover {
-  background: #C88E72;
+  background:#891d1a;
 }
 
-/* ===================== WISHLIST VIEW STYLES ===================== */
+/*   WISHLIST VIEW STYLES   */
 .wishlist-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -598,7 +598,7 @@ nav {
   padding: 40px 0;
 }
 
-/* ===================== RESPONSIVE DESIGN ===================== */
+/*   RESPONSIVE DESIGN   */
 @media(max-width: 1100px) {
   .hero { flex-direction: column; }
   .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #E5DFD5; padding-bottom: 20px; }

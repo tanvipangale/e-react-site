@@ -1,41 +1,58 @@
-import { createBrowserRouter } from 'react-router-dom';
-import MainLayout from './components/MainLayout.jsx';
+import React from 'react';
+import {
+  createBrowserRouter
+} from 'react-router-dom';
+
+import App from './App.jsx';
+
 import Home from './pages/Home.jsx';
-import Category from './pages/Category.jsx';
-import Login from './pages/Login.jsx';
-import Register from './pages/Register.jsx';
+import About from './pages/About.jsx';
+import Contact from './pages/Contact.jsx';
 import Cart from './pages/Cart.jsx';
 import Wishlist from './pages/Wishlist.jsx';
+import Login from './pages/Login.jsx';
+import Register from './pages/Register.jsx';
 
 export const router = createBrowserRouter([
   {
-    path: "/",
-    element: <MainLayout />, // The global frame
+    path: '/',
+    element: <App />,
+
     children: [
       {
-        path: "/",
-        element: <Home />,
+        index: true,
+        element: <Home />
       },
+
       {
-        path: "/category/:categorySlug",
-        element: <Category />,
+        path: 'about',
+        element: <About />
       },
+
       {
-        path: "/login",
-        element: <Login />,
+        path: 'contact',
+        element: <Contact />
       },
+
       {
-        path: "/register",
-        element: <Register />,
+        path: 'cart',
+        element: <Cart />
       },
+
       {
-        path: "/cart",
-        element: <Cart />,
+        path: 'wishlist',
+        element: <Wishlist />
       },
+
       {
-        path: "/wishlist",
-        element: <Wishlist />,
+        path: 'login',
+        element: <Login />
       },
+
+      {
+        path: 'register',
+        element: <Register />
+      }
     ]
-  },
+  }
 ]);

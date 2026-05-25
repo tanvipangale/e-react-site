@@ -19,12 +19,15 @@ function Home() {
 
   return (
     <>
-      {/* 💡 Old TopBar and Navbar tags removed from here! */}
-      
       {currentView === 'home' ? (
         <>
           <HeroSection onCategoryClick={handleCategorySelect} />
-          <ProductsSection />
+          
+          {/* 💡 PROP DRILLING: Pass the state down so ProductsSection can use it */}
+          <ProductsSection 
+            selectedCategory={selectedCategory} 
+            setSelectedCategory={setSelectedCategory} 
+          />
         </>
       ) : (
         <CategoryViewSection 
