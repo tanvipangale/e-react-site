@@ -1,40 +1,54 @@
-import React, { useState } from 'react';
+import React, {
+  useEffect,
+  useState
+} from 'react';
+
 import HeroSection from '../components/HeroSection.jsx';
 import ProductsSection from '../components/ProductsSection.jsx';
-import CategoryViewSection from '../components/CategoryViewSection.jsx';
+
+import { apiService } from '../services/api';
 
 function Home() {
-  const [currentView, setCurrentView] = useState('home');
-  const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const handleCategorySelect = (categoryName) => {
-    setSelectedCategory(categoryName);
-    setCurrentView('category');
-  };
+  const [selectedCategory,
+    setSelectedCategory] =
+    useState(null);
 
-  const handleResetToHome = () => {
-    setSelectedCategory(null);
-    setCurrentView('home');
-  };
+  const [products, setProducts] =
+    useState([]);
+
+  useEffect(() => {
+
+    const fetchProducts =
+      async () => {
+
+      const data =
+        await apiService.getProducts();
+
+      if (data) {
+        setProducts(data);
+      }
+    };
+
+    fetchProducts();
+
+  }, []);
 
   return (
     <>
-      {currentView === 'home' ? (
-        <>
-          <HeroSection onCategoryClick={handleCategorySelect} />
-          
-          {/* 💡 PROP DRILLING: Pass the state down so ProductsSection can use it */}
-          <ProductsSection 
-            selectedCategory={selectedCategory} 
-            setSelectedCategory={setSelectedCategory} 
-          />
-        </>
-      ) : (
-        <CategoryViewSection 
-          categoryName={selectedCategory} 
-          onBackToHome={handleResetToHome} 
-        />
-      )}
+
+      <HeroSection
+        selectedCategory={
+          selectedCategory
+        }
+        onCategoryClick={
+          setSelectedCategory
+        }
+        products={products}
+      />
+
+      <ProductsSection />
+
     </>
   );
 }

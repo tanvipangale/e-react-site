@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ProductCard from './ProductCard.jsx';
 import { apiService } from '../services/api';
 
-function ProductsSection({ selectedCategory, setSelectedCategory }) {
+function ProductsSection({ selectedCategory }) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -10,6 +10,12 @@ function ProductsSection({ selectedCategory, setSelectedCategory }) {
       const data = await apiService.getProducts();
 
       if (data) {
+        data.forEach((product) => {
+  console.log(
+    product.name,
+    product.categories
+  );
+});
         setProducts(data);
       }
     };
@@ -17,80 +23,110 @@ function ProductsSection({ selectedCategory, setSelectedCategory }) {
     fetchProducts();
   }, []);
 
-  // Show category products OR only sale products
-  const filteredProducts = selectedCategory
+  // CATEGORY FILTER
+  const categoryProducts = selectedCategory
     ? products.filter((product) =>
         product.categories?.some(
-          (cat) => cat.name === selectedCategory
+          (cat) =>
+            cat.name.toLowerCase().trim() ===
+            selectedCategory.toLowerCase().trim()
         )
       )
-    : products.filter((product) => product.on_sale);
+    : [];
 
-return (
-  <section className="section container">
+  // SALE PRODUCTS
+  const saleProducts = products.filter(
+    (product) =>
+      product.sale_price &&
+      product.sale_price !== ''
+  );
 
-    {/* FLASH SALES */}
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '30px'
-      }}
-    >
-      <div>
-        <div className="today">
-          Flash Sales
-        </div>
+  return (
+    <section className="section container">
 
-        <div className="flash-title">
-          Discount Products
-        </div>
-      </div>
-    </div>
+      {/* SHOW CATEGORY PRODUCTS */}
+      {selectedCategory ? (
+        <>
+          <div style={{ marginBottom: '30px' }}>
 
-    <div className="products">
-      {products
-        .filter(
-          (product) =>
-            product.sale_price &&
-            product.sale_price !== ''
-        )
-        .map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-          />
-        ))}
-    </div>
+            <div className="today">
+              {selectedCategory}
+            </div>
 
-    {/* ALL PRODUCTS */}
-    <div
-      style={{
-        marginTop: '80px',
-        marginBottom: '30px'
-      }}
-    >
-      <div className="today">
-        Our Collection
-      </div>
+            <div className="flash-title">
+              {selectedCategory} Collection
+            </div>
 
-      <div className="flash-title">
-        All Products
-      </div>
-    </div>
+          </div>
 
-    <div className="products">
-      {products.map((product) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-        />
-      ))}
-    </div>
+          <div className="products">
+            {categoryProducts.length > 0 ? (
+              categoryProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                />
+              ))
+            ) : (
+              <p>No products found.</p>
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          {/* FLASH SALES */}
+          <div style={{ marginBottom: '30px' }}>
 
-  </section>
-);
+            <div className="today">
+              Flash Sales
+            </div>
+
+            <div className="flash-title">
+              Discount Products
+            </div>
+
+          </div>
+
+          <div className="products">
+            {saleProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+              />
+            ))}
+          </div>
+
+          {/* ALL PRODUCTS */}
+          <div
+            style={{
+              marginTop: '80px',
+              marginBottom: '30px'
+            }}
+          >
+
+            <div className="today">
+              Our Collection
+            </div>
+
+            <div className="flash-title">
+              All Products
+            </div>
+
+          </div>
+
+          <div className="products">
+            {products.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+              />
+            ))}
+          </div>
+        </>
+      )}
+
+    </section>
+  );
 }
 
 export default ProductsSection;

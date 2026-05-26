@@ -1,9 +1,8 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 
-import TopBar from './components/Topbar.jsx';
-import Navbar from './components/Navbar.jsx';
 import Footer from './components/common/Footer.jsx';
+import Header from './components/common/Header.jsx';
 
 function App() {
   return (
@@ -15,8 +14,7 @@ function App() {
       }}
     >
 
-      <TopBar />
-      <Navbar />
+      <Header />
 
       <main style={{ flexGrow: 1 }}>
         <Outlet />

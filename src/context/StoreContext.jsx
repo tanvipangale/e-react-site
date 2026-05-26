@@ -1,118 +1,183 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect
+} from 'react'
 
 const StoreContext = createContext()
 
-const getUserFromStorage = () => localStorage.getItem('loggedInUser')
-const getCartKeyForUser = (username) => (username ? `cart:${username}` : 'cart:guest')
-const getWishlistKeyForUser = (username) => (username ? `wishlist:${username}` : 'wishlist:guest')
+const getUser = () =>
+  localStorage.getItem('loggedInUser')
 
-export function StoreProvider({ children }) {
-  const [user, setUser] = useState(getUserFromStorage() || null)
-  const [cart, setCart] = useState([])
-  const [wishlist, setWishlist] = useState([])
-  
-  // Drawer visibility states
-  const [isCartOpen, setIsCartOpen] = useState(false)
-  const [isWishlistOpen, setIsWishlistOpen] = useState(false)
+const getCartKey = (user) =>
+  `cart:${user || 'guest'}`
 
-  // Load user-specific data from localStorage on startup / user change
+const getWishlistKey = (user) =>
+  `wishlist:${user || 'guest'}`
+
+export function StoreProvider({
+  children
+}) {
+
+  const [user, setUser] =
+    useState(getUser())
+
+  const [cart, setCart] =
+    useState([])
+
+  const [wishlist, setWishlist] =
+    useState([])
+
+  // LOAD USER DATA
   useEffect(() => {
-    const cartKey = getCartKeyForUser(user)
-    const wishlistKey = getWishlistKeyForUser(user)
 
-    // Avoid parsing/setting state synchronously in the effect body
-    // by scheduling it for the next microtask.
-    Promise.resolve().then(() => {
-      const savedCart = localStorage.getItem(cartKey)
-      const savedWishlist = localStorage.getItem(wishlistKey)
+    const savedCart =
+      localStorage.getItem(
+        getCartKey(user)
+      )
 
-      setCart(savedCart ? JSON.parse(savedCart) : [])
-      setWishlist(savedWishlist ? JSON.parse(savedWishlist) : [])
-    })
+    const savedWishlist =
+      localStorage.getItem(
+        getWishlistKey(user)
+      )
+
+    setCart(
+      savedCart
+        ? JSON.parse(savedCart)
+        : []
+    )
+
+    setWishlist(
+      savedWishlist
+        ? JSON.parse(savedWishlist)
+        : []
+    )
+
   }, [user])
 
-
-  // Save data whenever cart or wishlist changes (user-scoped)
+  // SAVE CART
   useEffect(() => {
-    const cartKey = getCartKeyForUser(user)
-    localStorage.setItem(cartKey, JSON.stringify(cart))
+    localStorage.setItem(
+      getCartKey(user),
+      JSON.stringify(cart)
+    )
   }, [cart, user])
 
+  // SAVE WISHLIST
   useEffect(() => {
-    const wishlistKey = getWishlistKeyForUser(user)
-    localStorage.setItem(wishlistKey, JSON.stringify(wishlist))
+    localStorage.setItem(
+      getWishlistKey(user),
+      JSON.stringify(wishlist)
+    )
   }, [wishlist, user])
 
-  const login = useCallback((username) => {
-    const nextUser = username || null
-    if (nextUser) {
-      localStorage.setItem('loggedInUser', nextUser)
-      setUser(nextUser)
-    } else {
-      localStorage.removeItem('loggedInUser')
-      setUser(null)
-    }
-  }, [])
+  // LOGIN
+  const login = (username) => {
+    localStorage.setItem(
+      'loggedInUser',
+      username
+    )
 
-  const logout = useCallback(() => {
-    localStorage.removeItem('jwt_token')
-    localStorage.removeItem('loggedInUser')
+    setUser(username)
+  }
+
+  // LOGOUT
+  const logout = () => {
+    localStorage.removeItem(
+      'loggedInUser'
+    )
+
     setUser(null)
     setCart([])
     setWishlist([])
-  }, [])
+  }
 
-
+  // ADD TO CART
   const addToCart = (product) => {
+
     setCart((prev) => {
-      const existing = prev.find((item) => item.id === product.id)
-      if (existing) {
+
+      const exists =
+        prev.find(
+          (item) =>
+            item.id === product.id
+        )
+
+      if (exists) {
+
         return prev.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === product.id
+            ? {
+                ...item,
+                quantity:
+                  item.quantity + 1
+              }
+            : item
         )
       }
-      return [...prev, { ...product, quantity: 1 }]
+
+      return [
+        ...prev,
+        {
+          ...product,
+          quantity: 1
+        }
+      ]
     })
   }
 
-  const removeFromCart = (productId) => {
-    setCart((prev) => prev.filter((item) => item.id !== productId))
-  }
+  // REMOVE CART
+  const removeFromCart = (
+    id
+  ) => {
 
-  const updateQuantity = (productId, quantity) => {
-    if (quantity < 1) {
-      removeFromCart(productId)
-      return
-    }
     setCart((prev) =>
-      prev.map((item) =>
-        item.id === productId ? { ...item, quantity } : item
+      prev.filter(
+        (item) =>
+          item.id !== id
       )
     )
   }
 
-  const toggleWishlist = (product) => {
+  // WISHLIST
+  const toggleWishlist = (
+    product
+  ) => {
+
     setWishlist((prev) => {
-      const exists = prev.find((item) => item.id === product.id)
-      if (exists) {
-        return prev.filter((item) => item.id !== product.id)
-      }
-      return [...prev, product]
+
+      const exists =
+        prev.find(
+          (item) =>
+            item.id === product.id
+        )
+
+      return exists
+        ? prev.filter(
+            (item) =>
+              item.id !== product.id
+          )
+        : [...prev, product]
     })
   }
 
-  const removeFromWishlist = (productId) => {
-    setWishlist((prev) => prev.filter((item) => item.id !== productId))
-  }
+  // TOTALS
+  const cartCount =
+    cart.reduce(
+      (a, b) =>
+        a + b.quantity,
+      0
+    )
 
-  // Derived values
-  const cartTotal = cart.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  )
-
-  // This counts total items in the basket to display in the red Navbar circle bubble
-  const cartCount = cart.reduce((count, item) => count + item.quantity, 0)
+  const cartTotal =
+    cart.reduce(
+      (a, b) =>
+        a +
+        b.quantity *
+          Number(b.price),
+      0
+    )
 
   return (
     <StoreContext.Provider
@@ -120,22 +185,23 @@ export function StoreProvider({ children }) {
         user,
         cart,
         wishlist,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        toggleWishlist,
-        cartTotal,
-        cartCount, // Makes it accessible by your header
+
         login,
         logout,
-      }}
 
-  >
-    {children}
-  </StoreContext.Provider>
-)
+        addToCart,
+        removeFromCart,
+
+        toggleWishlist,
+
+        cartCount,
+        cartTotal
+      }}
+    >
+      {children}
+    </StoreContext.Provider>
+  )
 }
 
-export const useStore = () => useContext(StoreContext)
-
-
+export const useStore = () =>
+  useContext(StoreContext)
