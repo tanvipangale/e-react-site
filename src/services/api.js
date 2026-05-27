@@ -1,7 +1,7 @@
 const WORDPRESS_URL = 'http://localhost/wordpress';
 // Define your credentials here (Ensure these are kept secure in production)
-const CONSUMER_KEY = 'ck_60c0ed6aa4eef0a1c851921894f4776d3836e457'; 
-const CONSUMER_SECRET = 'cs_903db4eccb43d69184447f5642ec6527073d8cf7';
+const CONSUMER_KEY = 'ck_0acc9aa695f1ba5a1c114db011b4affdc3764804'; 
+const CONSUMER_SECRET = 'cs_07e31316e7ee8c5b68c8a7a60c741e2ccffd97c0';
 
 export const apiService = {
   // 1. Fetch user authorization token (Used in Login.jsx)
@@ -24,7 +24,7 @@ export const apiService = {
     return await response.json();
   },
 
- // 3. Fetch all item inventory listings
+  // 3. Fetch all item inventory listings
   getProducts: async () => {
     try {
       // Added '&per_page=50' to the end of the URL to fetch more products
@@ -36,7 +36,25 @@ export const apiService = {
         throw new Error('Failed to fetch products');
       }
       
-      return await response.json();
+      // Get the raw product array data from WooCommerce
+      const rawProducts = await response.json();
+      
+      // Map over every product and fix its image URLs globally
+      const cleanedProducts = rawProducts.map(product => {
+        if (product.images && Array.isArray(product.images)) {
+          return {
+            ...product,
+            images: product.images.map(img => ({
+              ...img,
+              src: img.src ? img.src.replace('https://', 'http://') : ''
+            }))
+          };
+        }
+        return product;
+      });
+      
+      return cleanedProducts;
+
     } catch (error) {
       console.error("Backend connection error:", error);
       return [];

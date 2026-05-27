@@ -52,7 +52,7 @@ const imageUrl =
       <button
         className="add-cart"
         onClick={() => addToCart(product)}
-        style={isInCart ? { background: '#C88E72', color: '#fff' } : undefined}
+        style={isInCart ? { background: '#891d1a', color: '#fff' } : undefined}
       >
         {isInCart ? 'Added' : 'Add To Cart'}
       </button>
