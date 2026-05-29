@@ -51,9 +51,7 @@ function HeroSection({
             </li>
 
           ))}
-
         </ul>
-
       </div>
 
       {/* RIGHT SIDE */}
@@ -61,9 +59,7 @@ function HeroSection({
 
         /* BANNER */
         <div className="banner">
-
           <div className="banner-text">
-
             <div className="banner-apple-brand">
               <i
                 className="fa-brands fa-apple"
@@ -97,7 +93,6 @@ function HeroSection({
             src="https://i.ibb.co/zhNGB4zM/i-Phone-removebg-preview.png"
             alt="iPhone"
           />
-
         </div>
 
       ) : (
@@ -122,28 +117,21 @@ function HeroSection({
           >
 
             {categoryProducts.length > 0 ? (
-
               categoryProducts.map((product) => (
 
                 <ProductCard
                   key={product.id}
                   product={product}
                 />
-
               ))
 
             ) : (
 
               <p>No products found.</p>
-
             )}
-
           </div>
-
         </div>
-
       )}
-
     </section>
   );
 }

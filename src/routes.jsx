@@ -12,6 +12,7 @@ import Cart from './pages/Cart.jsx';
 import Wishlist from './pages/Wishlist.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
+import ProductDetail from './components/ProductDetail.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -52,7 +53,17 @@ export const router = createBrowserRouter([
       {
         path: 'register',
         element: <Register />
+      },
+
+      /* ADDED NEW ROUTE BELOW:
+        This tells the browser to display the ProductDetail page 
+        whenever a user visits a link like "/product/123"
+      */
+      {
+        path: 'product/:id',
+        element: <ProductDetail />
       }
+      
     ]
   }
 ]);

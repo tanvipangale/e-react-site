@@ -27,7 +27,6 @@ export const apiService = {
   // 3. Fetch all item inventory listings
   getProducts: async () => {
     try {
-      // Added '&per_page=50' to the end of the URL to fetch more products
       const url = `${WORDPRESS_URL}/wp-json/wc/v3/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=50`;
       
       const response = await fetch(url);
@@ -36,16 +35,16 @@ export const apiService = {
         throw new Error('Failed to fetch products');
       }
       
-      // Get the raw product array data from WooCommerce
       const rawProducts = await response.json();
       
-      // Map over every product and fix its image URLs globally
+      // GLOBALLY CLEAN IMAGES FOR HOME, CART, AND WISHLIST
       const cleanedProducts = rawProducts.map(product => {
         if (product.images && Array.isArray(product.images)) {
           return {
             ...product,
             images: product.images.map(img => ({
               ...img,
+              // Safely replace https with http, or provide a blank string if src is missing
               src: img.src ? img.src.replace('https://', 'http://') : ''
             }))
           };

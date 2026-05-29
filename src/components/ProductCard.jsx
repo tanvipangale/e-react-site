@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import React from 'react';
 import { useStore } from '../context/StoreContext.jsx';
 
@@ -41,13 +42,20 @@ const imageUrl =
             style={{ color: isWishlisted ? '#891d1a' : '#1E1E1E', fontSize: '16px' }}
           ></i>
         </button>
-        <img src={imageUrl} alt={product.name} />
+        
+        {/* ADDED: This wraps your exact working image so clicking it opens the details page */}
+        <Link to={`/product/${product.id}`}>
+          <img src={imageUrl} alt={product.name} />
+        </Link>
       </div>
 
-      <div className="product-info">
-        <h4>{product.name}</h4>
-        <span className="price">${price}</span>
-      </div>
+      {/* ADDED: This wraps your text info so clicking the name or price opens the details page */}
+      <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <div className="product-info">
+          <h4>{product.name}</h4>
+          <span className="price">${price}</span>
+        </div>
+      </Link>
 
       <button
         className="add-cart"
