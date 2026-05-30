@@ -1,10 +1,10 @@
 const WORDPRESS_URL = 'http://localhost/wordpress';
-// Define your credentials here (Ensure these are kept secure in production)
+// Define credentials 
 const CONSUMER_KEY = 'ck_0acc9aa695f1ba5a1c114db011b4affdc3764804'; 
 const CONSUMER_SECRET = 'cs_07e31316e7ee8c5b68c8a7a60c741e2ccffd97c0';
 
 export const apiService = {
-  // 1. Fetch user authorization token (Used in Login.jsx)
+  // 1. Fetch user authorization token 
   loginUser: async (username, password) => {
     const response = await fetch(`${WORDPRESS_URL}/wp-json/jwt-auth/v1/token`, {
       method: 'POST',
@@ -14,7 +14,7 @@ export const apiService = {
     return await response.json();
   },
 
-  // 2. Register a new user profile account (Used in Register.jsx)
+  // 2. Register a new user profile account
   registerUser: async (username, email, password) => {
     const response = await fetch(`${WORDPRESS_URL}/wp-json/custom/v1/register`, {
       method: 'POST',

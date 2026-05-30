@@ -11,7 +11,7 @@ function Category() {
 
   return (
     <>
-      {/* Keeping your headers completely the same */}
+      {/* Keeping headers completely the same */}
       <TopBar />
       <Navbar />
 

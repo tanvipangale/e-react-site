@@ -43,13 +43,13 @@ const imageUrl =
           ></i>
         </button>
         
-        {/* ADDED: This wraps your exact working image so clicking it opens the details page */}
+        {/* ADDED: This wraps exact working image so clicking it opens the details page */}
         <Link to={`/product/${product.id}`}>
           <img src={imageUrl} alt={product.name} />
         </Link>
       </div>
 
-      {/* ADDED: This wraps your text info so clicking the name or price opens the details page */}
+      {/* ADDED: This wraps text info so clicking the name or price opens the details page */}
       <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
         <div className="product-info">
           <h4>{product.name}</h4>
