@@ -11,7 +11,6 @@ function Header() {
   };
 
   return (
-
     <header className="site-header">
       {/* Top Black Announcement Sub-Bar Section */}
       <div className="top-bar">
@@ -23,16 +22,23 @@ function Header() {
       </div>
 
       <nav>
+        {/* Logo Text branding */}
         <div className="logo">
           <Link to="/">Exclusive</Link>
         </div>
 
+        {/* Dynamic Center Navigation Row */}
         <div className="nav-links">
           <Link to="/">Home</Link>
+          
+          {/* 💡 Categories link added right here */}
+          <Link to="/categories">Categories</Link> 
+          
           <Link to="/contact">Contact</Link>
           <Link to="/about">About</Link>
         </div>
 
+        {/* Right Side Controls Utility Hub */}
         <div className="right-nav">
           {/* Interactive Catalog Search Field Box */}
           <div className="search-box">
@@ -55,7 +61,6 @@ function Header() {
               <Link to="/register"><button className="nav-btn register-btn">Register</button></Link>
             </>
           )}
-
 
           {/* Live Updating Wishlist Link Icon Counter Badge */}
           <Link to="/wishlist" className="iconHub icon" style={{ position: 'relative', display: 'inline-block' }}>
