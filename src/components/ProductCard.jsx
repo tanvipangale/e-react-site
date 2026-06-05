@@ -1,69 +1,65 @@
-import { Link } from 'react-router-dom';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useStore } from '../context/StoreContext.jsx';
 
-function ProductCard({ product }) {
-  const { addToCart, toggleWishlist, wishlist, cart } = useStore();
-  const isWishlisted = wishlist.some(item => item.id === product.id);
+function ProductCard({ product, isWishlistPage = false, onMoveToCart }) {
+  const { cart, toggleWishlist, wishlist } = useStore();
+
+  // Determine if item is already configured in cart/wishlist states
   const isInCart = cart.some((item) => item.id === product.id);
+  const isInWishlist = wishlist.some((item) => item.id === product.id);
 
-  // Get product image
-const imageUrl =
-  product.images && product.images.length > 0
-    ? product.images[0].src
-    : 'placeholder-image-url.jpg';
-    
-  // 2. Handle Price 
-  const price = product.price;
-
-  // 3. Handle Discount 
-  const calculateDiscount = () => {
-    if (product.regular_price && product.sale_price) {
-      const discount = ((product.regular_price - product.sale_price) / product.regular_price) * 100;
-      return Math.round(discount);
-    }
-    return null;
-  };
-  const discountPercent = calculateDiscount();
+  // Safe image string parser fallback rule
+  let imageUrl = 'https://via.placeholder.com/250';
+  if (product.images && product.images.length > 0) {
+    imageUrl = product.images[0].src;
+  } else if (typeof product.image === 'string') {
+    imageUrl = product.image;
+  }
 
   return (
     <div className="product">
       <div className="product-top">
-        {discountPercent > 0 && (
-          <div className="discount">-{discountPercent}%</div>
-        )}
+        {product.on_sale && <span className="discount">Sale</span>}
+        
         <button 
           className="wishlist-btn" 
           onClick={() => toggleWishlist(product)}
           style={{ border: 'none', cursor: 'pointer' }}
         >
-          <i 
-            className={`${isWishlisted ? 'fa-solid' : 'fa-regular'} fa-heart`}
-            style={{ color: isWishlisted ? '#891d1a' : '#1E1E1E', fontSize: '16px' }}
-          ></i>
+          <i className={isInWishlist ? "fa-solid fa-heart" : "fa-regular fa-heart"} style={{ color: '#891d1a' }}></i>
         </button>
-        
-        {/* ADDED: This wraps exact working image so clicking it opens the details page */}
+
         <Link to={`/product/${product.id}`}>
           <img src={imageUrl} alt={product.name} />
         </Link>
       </div>
 
-      {/* ADDED: This wraps text info so clicking the name or price opens the details page */}
-      <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-        <div className="product-info">
-          <h4>{product.name}</h4>
-          <span className="price">${price}</span>
-        </div>
-      </Link>
+      <div className="product-info">
+        <h4>{product.name}</h4>
+        <div className="price">${product.price || product.regular_price}</div>
+      </div>
 
-      <button
-        className="add-cart"
-        onClick={() => addToCart(product)}
-        style={isInCart ? { background: '#891d1a', color: '#fff' } : undefined}
-      >
-        {isInCart ? 'Added' : 'Add To Cart'}
-      </button>
+      {/* DYNAMIC BUTTON PLACEMENT CONDITION */}
+      {isWishlistPage ? (
+        /* If loaded inside the Wishlist, show ONLY the clean Move to Cart option */
+        <button
+          className="add-cart"
+          onClick={() => onMoveToCart(product)}
+          style={{ background: '#1E1E1E' }}
+        >
+          Move To Cart
+        </button>
+      ) : (
+        /* If loaded on the Homepage/Catalog, show standard default cart buttons */
+        <button
+          className="add-cart"
+          onClick={() => !isInCart && useStore().addToCart(product)}
+          style={{ background: isInCart ? '#891d1a' : '#1E1E1E' }}
+        >
+          {isInCart ? 'Added' : 'Add To Cart'}
+        </button>
+      )}
     </div>
   );
 }

@@ -17,7 +17,7 @@ function ProductsSection({ selectedCategory, allProducts = [], isLoading }) {
       )
     : [];
 
-  // 2. ISOLATE SALE PRODUCTS (Items with a valid sale price)
+  // 2. ISOLATE SALE PRODUCTS 
   const saleProducts = products.filter(
     (product) => product.sale_price && product.sale_price !== ''
   );
