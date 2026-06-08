@@ -93,40 +93,55 @@ export function StoreProvider({
     setWishlist([])
   }
 
-  // ADD TO CART
-  const addToCart = (product) => {
+const addToCart = async (product) => {
 
-    setCart((prev) => {
+  try {
 
-      const exists =
-        prev.find(
-          (item) =>
-            item.id === product.id
-        )
+    // Send product to WooCommerce cart
+    await apiService.addToCart(
+      product.id,
+      1
+    )
 
-      if (exists) {
+  } catch (error) {
 
-        return prev.map((item) =>
-          item.id === product.id
-            ? {
-                ...item,
-                quantity:
-                  item.quantity + 1
-              }
-            : item
-        )
-      }
-
-      return [
-        ...prev,
-        {
-          ...product,
-          quantity: 1
-        }
-      ]
-    })
+    console.error(
+      'WooCommerce Add To Cart Error:',
+      error
+    )
   }
 
+  // Keep your existing local cart logic
+  setCart((prev) => {
+
+    const exists =
+      prev.find(
+        (item) =>
+          item.id === product.id
+      )
+
+    if (exists) {
+
+      return prev.map((item) =>
+        item.id === product.id
+          ? {
+              ...item,
+              quantity:
+                item.quantity + 1
+            }
+          : item
+      )
+    }
+
+    return [
+      ...prev,
+      {
+        ...product,
+        quantity: 1
+      }
+    ]
+  })
+}
   // REMOVE CART
   const removeFromCart = (
     id

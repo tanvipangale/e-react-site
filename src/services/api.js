@@ -46,11 +46,11 @@ export const apiService = {
 
       const rawProducts = await response.json();
 
-      const cleanedProducts = rawProducts.map(product => {
+      const cleanedProducts = rawProducts.map((product) => {
         if (product.images && Array.isArray(product.images)) {
           return {
             ...product,
-            images: product.images.map(img => ({
+            images: product.images.map((img) => ({
               ...img,
               src: img.src
                 ? img.src.replace('https://', 'http://')
@@ -73,7 +73,11 @@ export const apiService = {
   getCart: async () => {
     try {
       const response = await fetch(
-        `${WORDPRESS_URL}/wp-json/wc/store/v1/cart`
+        `${WORDPRESS_URL}/wp-json/wc/store/v1/cart`,
+        {
+          method: 'GET',
+          credentials: 'include',
+        }
       );
 
       if (!response.ok) {
@@ -94,6 +98,7 @@ export const apiService = {
         `${WORDPRESS_URL}/?add-to-cart=${productId}&quantity=${quantity}`,
         {
           method: 'GET',
+          credentials: 'include',
         }
       );
 
@@ -117,6 +122,10 @@ export const apiService = {
           body: JSON.stringify(orderData),
         }
       );
+
+      if (!response.ok) {
+        throw new Error('Failed to create order');
+      }
 
       return await response.json();
     } catch (error) {

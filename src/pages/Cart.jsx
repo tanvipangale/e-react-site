@@ -1,8 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../context/StoreContext.jsx';
 
 function Cart() {
+
+  const navigate = useNavigate();
 
   const { cart, removeFromCart, cartTotal } = useStore();
 
@@ -76,10 +78,10 @@ function Cart() {
 
           {cart.map((item) => {
 
-            // SIMPLE IMAGE FIX
             const imageUrl =
               item.images?.[0]?.src ||
-              'placeholder-image-url.jpg';
+              item.image ||
+              'https://via.placeholder.com/250';
 
             return (
               <div
@@ -209,9 +211,7 @@ function Cart() {
 
           <button
             className="checkout-btn"
-            onClick={() =>
-              alert('Proceeding to checkout...')
-            }
+            onClick={() => navigate('/checkout')}
           >
             Proceed to checkout
           </button>

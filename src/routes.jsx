@@ -10,6 +10,8 @@ import Wishlist from './pages/Wishlist.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import ProductDetail from './components/ProductDetail.jsx';
+import Checkout from './pages/Checkout.jsx';
+import OrderSuccess from './pages/OrderSuccess.jsx';
 
 // 💡 Imports for our two brand new pages:
 import Categories from './pages/Categories.jsx';
@@ -54,7 +56,6 @@ export const router = createBrowserRouter([
         element: <ProductDetail />
       },
       
-      // 💡 Added new Category routes right below:
       {
         path: 'categories',
         element: <Categories />
@@ -62,7 +63,15 @@ export const router = createBrowserRouter([
       {
         path: 'category/:categoryName',
         element: <CategoryView />
-      }
+      }, 
+      {
+        path: 'checkout',
+        element: <Checkout />
+      },
+      {
+        path: 'order-success',
+        element: <OrderSuccess />
+      },
     ]
   }
 ]);
