@@ -1,18 +1,34 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../../context/StoreContext.jsx'; 
 
 function Header() {
-  // Safely extract live state variable quantities from the active StoreContext
+  // Extract live variables and functions from your global StoreContext
   const { cartCount, wishlist, user, logout } = useStore();
+  
+  // React Router hook to move the user to different pages programmatically
+  const navigate = useNavigate();
+  
+  // State variable to store the text typed inside the search bar input
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleLogout = () => {
     logout();
   };
 
+  // Triggers automatically when the user hits 'Enter' or clicks the submit button
+  const handleSearchSubmit = (e) => {
+    e.preventDefault(); // Keeps the web page from refreshing the browser
+    
+    if (searchTerm.trim()) {
+      // Moves the user to the Search Results page along with their typed query text
+      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
+
   return (
     <header className="site-header">
-      {/* Top Black Announcement Sub-Bar Section */}
+      {/* Top Black Announcement Banner */}
       <div className="top-bar">
         Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!
         <span>ShopNow</span>
@@ -22,31 +38,38 @@ function Header() {
       </div>
 
       <nav>
-        {/* Logo Text branding */}
+        {/* Brand Logo Link */}
         <div className="logo">
           <Link to="/">Exclusive</Link>
         </div>
 
-        {/* Dynamic Center Navigation Row */}
+        {/* Center Main Navigation Links */}
         <div className="nav-links">
           <Link to="/">Home</Link>
-          
-          {/* 💡 Categories link added right here */}
           <Link to="/categories">Categories</Link> 
-          
           <Link to="/contact">Contact</Link>
           <Link to="/about">About</Link>
         </div>
 
-        {/* Right Side Controls Utility Hub */}
+        {/* Right Navigation Controls Hub */}
         <div className="right-nav">
-          {/* Interactive Catalog Search Field Box */}
-          <div className="search-box">
-            <input type="text" placeholder="What are you looking for?" />
-            <i className="fa-solid fa-magnifying-glass"></i>
-          </div>
+          
+          {/* 🛠️ FIXED: Changed from a <div> to a functional HTML <form> */}
+          <form onSubmit={handleSearchSubmit} className="search-box">
+            <input 
+              type="text" 
+              placeholder="What are you looking for?" 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)} // Live updates state as you type
+            />
+            
+            {/* Wrapping the icon in a submit button makes it fully clickable */}
+            <button type="submit" style={{ background: 'none', border: 'none', padding: 0 }}>
+              <i className="fa-solid fa-magnifying-glass" style={{ cursor: 'pointer' }}></i>
+            </button>
+          </form>
 
-          {/* Authorization Routes Redirection Switches */}
+          {/* User Logged-In Display Check switches */}
           {user ? (
             <button
               type="button"
@@ -62,7 +85,7 @@ function Header() {
             </>
           )}
 
-          {/* Live Updating Wishlist Link Icon Counter Badge */}
+          {/* Wishlist Heart Icon Badge Counter */}
           <Link to="/wishlist" className="iconHub icon" style={{ position: 'relative', display: 'inline-block' }}>
             <i className="fa-regular fa-heart"></i>
             {wishlist.length > 0 && (
@@ -70,7 +93,7 @@ function Header() {
             )}
           </Link>
 
-          {/* Live Updating Cart Link Icon Counter Badge */}
+          {/* Shopping Cart Bag Icon Badge Counter */}
           <Link to="/cart" className="iconHub icon" style={{ position: 'relative', display: 'inline-block' }}>
             <i className="fa-solid fa-cart-shopping"></i>
             {cartCount > 0 && (

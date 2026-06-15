@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import { apiService } from '../services/api';
+import { PayPalButtons } from '@paypal/react-paypal-js';
 
 function Checkout() {
   const navigate = useNavigate();
@@ -84,6 +85,74 @@ function Checkout() {
 
     setLoading(false);
   };
+
+  const createPayPalOrder = (data, actions) => {
+  return actions.order.create({
+    purchase_units: [
+      {
+        amount: {
+          value: Number(cartTotal).toFixed(2),
+        },
+      },
+    ],
+  });
+};
+
+const onApprovePayPal = async (data, actions) => {
+  try {
+    const details = await actions.order.capture();
+
+    const orderData = {
+      payment_method: 'paypal',
+      payment_method_title: 'PayPal',
+      set_paid: true,
+      transaction_id: details.id,
+
+      billing: {
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        address_1: formData.address,
+        city: formData.city,
+        state: formData.state,
+        postcode: formData.postcode,
+        country: 'IN',
+        email: formData.email,
+        phone: formData.phone,
+      },
+
+      shipping: {
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        address_1: formData.address,
+        city: formData.city,
+        state: formData.state,
+        postcode: formData.postcode,
+        country: 'IN',
+      },
+
+      line_items: cart.map((item) => ({
+        product_id: item.id,
+        quantity: item.quantity,
+      })),
+    };
+
+    const order = await apiService.createOrder(orderData);
+
+    alert(
+      `Payment Successful!\nOrder ID: ${order.id}`
+    );
+
+    navigate('/');
+  } catch (error) {
+    console.error(error);
+    alert('Payment succeeded but order creation failed');
+  }
+};
+
+const onPayPalError = (err) => {
+  console.error('PayPal Error:', err);
+  alert(`PayPal payment failed: ${JSON.stringify(err)}`);
+};
 
   return (
     <div className="section container">
@@ -204,6 +273,19 @@ function Checkout() {
               ? 'Placing Order...'
               : 'Place Order'}
           </button>
+
+          <div style={{ marginTop: '20px' }}>
+  <PayPalButtons
+    style={{
+      layout: 'vertical',
+      shape: 'rect',
+      label: 'paypal',
+    }}
+    createOrder={createPayPalOrder}
+    onApprove={onApprovePayPal}
+    onError={onPayPalError}
+  />
+</div>
 
         </div>
 

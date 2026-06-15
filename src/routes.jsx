@@ -12,6 +12,7 @@ import Register from './pages/Register.jsx';
 import ProductDetail from './components/ProductDetail.jsx';
 import Checkout from './pages/Checkout.jsx';
 import OrderSuccess from './pages/OrderSuccess.jsx';
+import SearchResults from './pages/SearchResults';
 
 // 💡 Imports for our two brand new pages:
 import Categories from './pages/Categories.jsx';
@@ -71,6 +72,10 @@ export const router = createBrowserRouter([
       {
         path: 'order-success',
         element: <OrderSuccess />
+      },
+      {
+        path: 'search',
+        element: <SearchResults />
       },
     ]
   }
