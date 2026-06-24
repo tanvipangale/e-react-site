@@ -60,7 +60,6 @@ function Category() {
         })}
       </main>
 
-      {/* Static Layout Footer Display */}
       <footer style={{ background: '#000', color: '#fff', padding: '60px 5%', marginTop: '80px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '40px' }}>
           <div>

@@ -13,8 +13,6 @@ import ProductDetail from './components/ProductDetail.jsx';
 import Checkout from './pages/Checkout.jsx';
 import OrderSuccess from './pages/OrderSuccess.jsx';
 import SearchResults from './pages/SearchResults';
-
-// 💡 Imports for our two brand new pages:
 import Categories from './pages/Categories.jsx';
 import CategoryView from './pages/CategoryView.jsx';
 

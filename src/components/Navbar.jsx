@@ -7,7 +7,7 @@ function Navbar() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
 
-  // 💡 This function handles the submission
+  // This function handles the submission
   const handleSearchSubmit = (e) => {
     // Prevent the browser from refreshing the page automatically
     e.preventDefault(); 
@@ -30,7 +30,6 @@ function Navbar() {
 
       <div className="right-nav">
         
-        {/* 🛠️ IMPROVED: Wrapped the search elements inside a <form> */}
         <form onSubmit={handleSearchSubmit} className="search-box">
           <input
             type="text"
@@ -39,7 +38,6 @@ function Navbar() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
 
-          {/* Changing this to a button with type="submit" ensures clicking it sends the form */}
           <button type="submit" style={{ background: 'none', border: 'none', padding: 0 }}>
             <i
               className="fa-solid fa-magnifying-glass"

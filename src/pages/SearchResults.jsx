@@ -5,7 +5,7 @@ import { apiService } from '../services/api';
 
 function SearchResults() {
   const [searchParams] = useSearchParams();
-  // Reads the exact search term string from the current address URL bar (?q=...)
+  // Reads the exact search term string from the current address URL bar
   const query = searchParams.get('q') || '';
 
   const [products, setProducts] = useState([]);
@@ -74,7 +74,6 @@ function SearchResults() {
           </p>
         </div>
       ) : (
-        /* 🛠️ FIXED: Added your layout class structure grid hook to map cards seamlessly */
         <div className="products">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />

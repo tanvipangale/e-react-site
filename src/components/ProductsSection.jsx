@@ -3,7 +3,6 @@ import ProductCard from './ProductCard.jsx';
 
 function ProductsSection({ selectedCategory, allProducts = [], isLoading }) {
   
-  // Use the data passed from Home.jsx, defaulting to an empty list if not ready
   const products = allProducts;
 
   // 1. FILTER PRODUCTS BY SELECTED CATEGORY
