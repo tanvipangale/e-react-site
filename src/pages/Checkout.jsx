@@ -91,6 +91,7 @@ function Checkout() {
     purchase_units: [
       {
         amount: {
+          currency_code: "USD",
           value: Number(cartTotal).toFixed(2),
         },
       },

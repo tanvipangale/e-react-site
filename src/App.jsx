@@ -9,8 +9,8 @@ function App() {
   return (
     <PayPalScriptProvider
       options={{
-        clientId: 'BAAwbk3LHEbnI0IbxawktwCSrn-oeidWZFXYUtz18dEOdxGBdvCs95M5oQUbbQeeFnmni1jBg1IntSaL4g',
-        currency: 'INR',
+        clientId: 'AdS3gdnHf5Qt_4hDeJaqi1aQGFyaZ7gd95kCK-mkRk8OwFex98Q-yGUHrYZraASztZLjWTaXLPbbhcy_',
+        currency: 'USD',
         intent: 'capture'
       }}
     >
